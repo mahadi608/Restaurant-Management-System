@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 /*
  * To change this template, choose Tools | Templates and open the template in
  * the editor.
@@ -15,16 +16,20 @@ import java.sql.Statement;
  *
  * @author EMRAN
  */
-public class NewJFrame extends javax.swing.JFrame implements GlobalConstants {
+public class FoodOrder extends javax.swing.JFrame implements GlobalConstants {
 
     
     int a, b, c, d, e;
     int a1, b1, c1, d1, e1;
+    
+    ArrayList<Integer> meals = new ArrayList<Integer>();
+    ArrayList<Integer> drinks = new ArrayList<Integer>();
+    
 
     /**
-     * Creates new form NewJFrame
+     * Creates new form FoodOrder
      */
-    public NewJFrame() {
+    public FoodOrder() {
         initComponents();
     }
 
@@ -347,6 +352,11 @@ public class NewJFrame extends javax.swing.JFrame implements GlobalConstants {
         totalmeals.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         totalmeals.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         totalmeals.setText("0");
+        totalmeals.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                totalmealsActionPerformed(evt);
+            }
+        });
 
         totaldrink.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         totaldrink.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -475,26 +485,28 @@ public class NewJFrame extends javax.swing.JFrame implements GlobalConstants {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
 
-
-        this.a = Integer.parseInt(meals1.getText());
-        this.b = Integer.parseInt(meals2.getText());
-        this.c = Integer.parseInt(meals3.getText());
-        this.d = Integer.parseInt(meals4.getText());
-        this.e = Integer.parseInt(meals5.getText());
-
-        Totalmeals obj = new Totalmeals(a, b, c, d, e);
-        int TotalMealsOrder = obj.mealsorder();
+        meals.clear();
+        drinks.clear();
+        meals.add(Integer.parseInt(meals1.getText()));
+        meals.add(Integer.parseInt(meals2.getText()));
+        meals.add(Integer.parseInt(meals3.getText()));
+        meals.add(Integer.parseInt(meals4.getText()));
+        meals.add(Integer.parseInt(meals5.getText()));
+      
+        TotalOrder obj = new TotalOrder();
+        
+        int TotalMealsOrder=obj.mealsOrder(meals);
         totalmeals.setText("" + TotalMealsOrder);
 
-        this.a1 = Integer.parseInt(drink1.getText());
-        this.b1 = Integer.parseInt(drink2.getText());
-        this.c1 = Integer.parseInt(drink3.getText());
-        this.d1 = Integer.parseInt(drink4.getText());
-        this.e1 = Integer.parseInt(drink5.getText());
+        drinks.add(Integer.parseInt(drink1.getText()));
+        drinks.add(Integer.parseInt(drink2.getText()));
+        drinks.add(Integer.parseInt(drink3.getText()));
+        drinks.add(Integer.parseInt(drink4.getText()));
+        drinks.add(Integer.parseInt(drink5.getText()));
 
 
-        TotalDrink obj1 = new TotalDrink(a1, b1, c1, d1, e1);
-        int TotalDrinkOrder = obj1.DrinkOrder();
+        
+        int TotalDrinkOrder = obj.drinksOrder(drinks);
         totaldrink.setText("" + TotalDrinkOrder);
 
 
@@ -512,34 +524,33 @@ public class NewJFrame extends javax.swing.JFrame implements GlobalConstants {
                 + "--------------------------------------------------------------------------------------\n\n");
 
 
-        int[] iteam = {a, b, c, d, e};
-        int[] iteam2 = {a1, b1, c1, d1, e1};
+        
         int j = 0;
 
 
-        for (int i = 0; i < iteam.length; i++) {
-            if (iteam[i] != 0) {
+        for (int i = 0; i < meals.size(); i++) {
+            if (meals.get(i) != 0) {
 
                 jTextArea1.setText(
                         jTextArea1.getText()
                         + mealsarrg[i]
                         + "\t\t"
-                        + iteam[i]
+                        + meals.get(i)
                         + "\t"
-                        + pricemeals[i] * iteam[i]
+                        + pricemeals[i] * meals.get(i)
                         + "\n\n");
             }
         }
 
-        for (int i = 0; i < iteam2.length; i++) {
-            if (iteam2[i] != 0) {
+        for (int i = 0; i < drinks.size(); i++) {
+            if (drinks.get(i) != 0) {
                 jTextArea1.setText(
                         jTextArea1.getText()
                         + drinksarrg[i]
                         + "\t\t"
-                        + iteam2[i]
+                        + drinks.get(i)
                         + "\t"
-                        + pricedrink[i] * iteam2[i]
+                        + pricedrink[i] * drinks.get(i)
                         + "\n\n");
             }
         }
@@ -563,22 +574,22 @@ public class NewJFrame extends javax.swing.JFrame implements GlobalConstants {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         int[] iteam = {a, b, c, d, e};
+        
 
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/java", "root", "");
-            Statement stmt = con.createStatement();
+            Conn conn = new Conn();
+            
             for (int i = 0; i < iteam.length; i++) {
 
                 if (iteam[i] != 0) {
                     String sql = "INSERT INTO `foodorder`(`FoodName`, `FoodPrice`, `Foodquntity`, `TotalPrice`) "
                             + "VALUES ('" + mealsarrg[i] + "','" + pricemeals[i] + "','" + iteam[i] + "','" + pricemeals[i]*iteam[i] + "')";
-                    stmt.executeUpdate(sql);
+                    conn.stmt.executeUpdate(sql);
                 }
 
             }
-            con.close();
+            conn.con.close();
 
 
             // jTextArea1.print();
@@ -622,6 +633,10 @@ public class NewJFrame extends javax.swing.JFrame implements GlobalConstants {
         //jTextArea1.setText("hello");
     }//GEN-LAST:event_jTextArea1AncestorAdded
 
+    private void totalmealsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_totalmealsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_totalmealsActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -643,13 +658,13 @@ public class NewJFrame extends javax.swing.JFrame implements GlobalConstants {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FoodOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FoodOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FoodOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FoodOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -659,7 +674,7 @@ public class NewJFrame extends javax.swing.JFrame implements GlobalConstants {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                new NewJFrame1().setVisible(true);
+                new HomePage().setVisible(true);
             }
         });
     }

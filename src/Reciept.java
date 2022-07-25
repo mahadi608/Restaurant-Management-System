@@ -7,7 +7,7 @@
  *
  * @author EMRAN
  */
-public class Reciept extends NewJFrame implements GlobalConstants {
+public class Reciept extends FoodOrder implements GlobalConstants {
     int Meals1,Meals2,Meals3,Meals4,Meals5;
     int Drink1,Drink2,Drink3,Drink4,Drink5;
     String[] Mealsresult;

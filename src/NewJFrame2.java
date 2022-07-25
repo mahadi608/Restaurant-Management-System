@@ -132,7 +132,7 @@ public class NewJFrame2 extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        NewJFrame1 f2 = new NewJFrame1();
+        HomePage f2 = new HomePage();
         f2.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton5ActionPerformed
