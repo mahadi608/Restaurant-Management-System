@@ -72,7 +72,7 @@ public class DataStore {
         
     }
     
-    public ArrayList<Integer> deinksprice(){
+    public ArrayList<Integer> drinksprice(){
         
         return drinksPrice;
         

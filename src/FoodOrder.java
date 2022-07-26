@@ -19,12 +19,12 @@ import java.util.ArrayList;
 public class FoodOrder extends javax.swing.JFrame implements GlobalConstants {
 
     
-    int a, b, c, d, e;
-    int a1, b1, c1, d1, e1;
-    
     ArrayList<Integer> meals = new ArrayList<Integer>();
     ArrayList<Integer> drinks = new ArrayList<Integer>();
-    
+    ArrayList<String> mealsName = new ArrayList<String>();
+    ArrayList<Integer> mealsPrice = new ArrayList<Integer>();
+    ArrayList<String> drinksName = new ArrayList<String>();
+    ArrayList<Integer> drinksPrice = new ArrayList<Integer>();
 
     /**
      * Creates new form FoodOrder
@@ -487,15 +487,16 @@ public class FoodOrder extends javax.swing.JFrame implements GlobalConstants {
 
         meals.clear();
         drinks.clear();
+
         meals.add(Integer.parseInt(meals1.getText()));
         meals.add(Integer.parseInt(meals2.getText()));
         meals.add(Integer.parseInt(meals3.getText()));
         meals.add(Integer.parseInt(meals4.getText()));
         meals.add(Integer.parseInt(meals5.getText()));
-      
+
         TotalOrder obj = new TotalOrder();
-        
-        int TotalMealsOrder=obj.mealsOrder(meals);
+
+        int TotalMealsOrder = obj.mealsOrder(meals);
         totalmeals.setText("" + TotalMealsOrder);
 
         drinks.add(Integer.parseInt(drink1.getText()));
@@ -505,7 +506,7 @@ public class FoodOrder extends javax.swing.JFrame implements GlobalConstants {
         drinks.add(Integer.parseInt(drink5.getText()));
 
 
-        
+
         int TotalDrinkOrder = obj.drinksOrder(drinks);
         totaldrink.setText("" + TotalDrinkOrder);
 
@@ -524,7 +525,7 @@ public class FoodOrder extends javax.swing.JFrame implements GlobalConstants {
                 + "--------------------------------------------------------------------------------------\n\n");
 
 
-        
+
         int j = 0;
 
 
@@ -573,18 +574,31 @@ public class FoodOrder extends javax.swing.JFrame implements GlobalConstants {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        int[] iteam = {a, b, c, d, e};
         
+        DataStore data = new DataStore();
+        mealsName = data.mealsname();
+        mealsPrice = data.mealsprice();
+        drinksName = data.drinksname();
+        drinksPrice = data.drinksprice();
 
 
         try {
             Conn conn = new Conn();
-            
-            for (int i = 0; i < iteam.length; i++) {
 
-                if (iteam[i] != 0) {
+            for (int i = 0; i < meals.size(); i++) {
+
+                if (meals.get(i) != 0) {
                     String sql = "INSERT INTO `foodorder`(`FoodName`, `FoodPrice`, `Foodquntity`, `TotalPrice`) "
-                            + "VALUES ('" + mealsarrg[i] + "','" + pricemeals[i] + "','" + iteam[i] + "','" + pricemeals[i]*iteam[i] + "')";
+                            + "VALUES ('" + mealsName.get(i) + "','" + mealsPrice.get(i) + "','" + meals.get(i) + "','" + mealsPrice.get(i)* meals.get(i) + "')";
+                    conn.stmt.executeUpdate(sql);
+                }
+
+            }
+            for (int i = 0; i < drinks.size(); i++) {
+
+                if (drinks.get(i) != 0) {
+                    String sql = "INSERT INTO `foodorder`(`FoodName`, `FoodPrice`, `Foodquntity`, `TotalPrice`) "
+                            + "VALUES ('" + drinksName.get(i) + "','" + drinksPrice.get(i) + "','" + drinks.get(i) + "','" + drinksPrice.get(i)* drinks.get(i) + "')";
                     conn.stmt.executeUpdate(sql);
                 }
 
@@ -597,6 +611,8 @@ public class FoodOrder extends javax.swing.JFrame implements GlobalConstants {
             System.out.print(d);
 
         }
+        
+        jTextArea1.paintAll(null);
 
 
     }//GEN-LAST:event_jButton2ActionPerformed
